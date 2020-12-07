@@ -36,7 +36,7 @@ void printdir(char *dir, int depth)
 int main()
 {
 	printf("Directory scan of /home:\n");
-	printdir("/home",0);
+	printdir(".",0);
 	printf("done.\n");
 	exit(0);
 }
