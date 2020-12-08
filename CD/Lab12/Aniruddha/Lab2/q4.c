@@ -96,9 +96,7 @@ void getNextToken(FILE *fa,FILE *fb){
 		// remove comments , blankspaces
 		if(ca==' '){
 			putc(ca,fb);
-			while(ca==' '){
-				ca = getc(fa); ++col;
-			}
+			
 		}
 		if (ca=='/'){
 			cb = getc(fa); ++col;
@@ -118,6 +116,19 @@ void getNextToken(FILE *fa,FILE *fb){
 				fseek(fa, -2, SEEK_CUR);
 			}
 		}
+
+		// check for string
+		if (ca=='"'){
+			int y=0;
+			ca = getc(fa); ++col; ++y;
+			while(ca!='"'){
+				ca = getc(fa); ++col; ++y;
+				// printf(" oh2 %c \n",ca );
+			}
+			printf("< %s ,%d ,%d > \n", "string",row,(col-y) );
+			ca = getc(fa); ++col;
+		}
+
 		
 		// check for keywords
 		if( isalpha(ca)  ){
