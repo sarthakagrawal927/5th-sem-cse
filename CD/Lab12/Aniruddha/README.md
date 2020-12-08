@@ -1,7 +1,7 @@
 # Awesome Lexical analyzer / Toker generator ->
 
 
-
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -361,6 +361,6 @@ int main()
 
     fclose(f1);
 }
-
+```
 
 
