@@ -3,269 +3,271 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-struct token
+void removeComments()
 {
-char token_name [100];
-int index;
-unsigned int row,col; //Line numbers.
-char type[100];
-} token;
+	FILE *fa, *fb;
+	int ca, cb;
 
-void print_token(struct token s){
-   printf("<%s,%d,%d>",s.token_name,s.row,s.col);
-   return;
-}
-
-void removeComments(){
-	FILE *fa,*fb; int ca,cb;
-
-	fa = fopen("inputg.txt","r");
-	if(fa == NULL){
+	fa = fopen("q1in.c", "r");
+	if (fa == NULL)
+	{
 		printf("Cannot open\n");
-			return;
+		return;
 	}
-	fb = fopen("q1out.txt","w+");
+	fb = fopen("q1out.c", "w");
 	ca = getc(fa);
-	while(ca != EOF){
-		if( ca == ' '){
-			putc(ca,fb);
-			while(ca == ' '|| ca=='\t') ca = getc(fa);
+	while (ca != EOF)
+	{
+		if (ca == ' ')
+		{
+			putc(ca, fb);
+			while (ca == ' ')
+				ca = getc(fa);
 		}
-		if(ca == '/'){
+		if (ca == '/')
+		{
 			cb = getc(fa);
-			if(cb == '/'){
-				while(ca != '\n') ca = getc(fa);
-				putc(ca,fb);
-			}
-			else if( cb == '*'){
-				do{
-					while(ca != '*') ca = getc(fa);
+			if (cb == '/')
+			{
+				while (ca != '\n')
 					ca = getc(fa);
-				}while(ca != '/');
+				putc(ca, fb);
 			}
-			else{
-				putc(ca,fb);
-				putc(cb,fb);
+			else if (cb == '*')
+			{
+				do
+				{
+					while (ca != '*')
+						ca = getc(fa);
+					ca = getc(fa);
+				} while (ca != '/');
+			}
+			else
+			{
+				putc(ca, fb);
+				putc(cb, fb);
 			}
 		}
-		else putc(ca,fb);
+		else
+			putc(ca, fb);
 		ca = getc(fa);
 	}
 	fclose(fa);
 	fclose(fb);
 }
 
-void removeDirectives(){
-	FILE *fa,*fb; int ca,cb;
+void removeDirectives()
+{
+	FILE *fa, *fb;
+	int ca, cb;
 	removeComments();
 
-	fa = fopen("q1out.txt","r");
-	if(fa == NULL){
+	fa = fopen("q1out.c", "r");
+	if (fa == NULL)
+	{
 		printf("Cannot open\n");
 		return;
 	}
-	fb = fopen("q2tempout.txt","w+");
+	fb = fopen("q2tempout.c", "w");
 	ca = getc(fa);
-	while(ca != EOF){
-		if( ca == '#'){
-			do{
+	while (ca != EOF)
+	{
+		if (ca == '#')
+		{
+			do
+			{
 				ca = getc(fa);
-			}while(ca != '\n');
+			} while (ca != '\n');
 		}
-		putc(ca,fb);
+		putc(ca, fb);
 		ca = getc(fa);
 	}
 
 	fclose(fa);
 	fclose(fb);
 
-	fa= fopen("q2tempout.txt","r");
-		if(fa == NULL){
+	fa = fopen("q2tempout.c", "r");
+	if (fa == NULL)
+	{
 		printf("Cannot open\n");
 		return;
 	}
-	fb = fopen("q2out.txt","w+");
-	ca = fgetc(fa);
-	while(ca == '\n'){
-			ca = fgetc(fa);
-		}
-	while(ca != EOF){
+	fb = fopen("q2out.c", "w");
+	ca = getc(fa);
+	while (ca == '\n')
+	{
+		ca = getc(fa);
+	}
+	while (ca != EOF)
+	{
 
-		putc(ca,fb);
-		ca = fgetc(fa);
+		putc(ca, fb);
+		ca = getc(fa);
 	}
 
 	fclose(fa);
 	fclose(fb);
 
-	if (remove("q2tempout.txt") != 0) printf("Error\n");
+	if (remove("q2tempout.c") != 0)
+		printf("Error\n");
 }
 
 char key[32][10] = {
-	"auto","double","int","struct","break","else","long",
-      "switch","case","enum","register","typedef","char",
-      "extern","return","union","const","float","short",
-      "unsigned","continue","for","signed","void","default",
-      "goto","sizeof","voltile","do","if","static","while"
-};
+	"auto", "double", "int", "struct", "break", "else", "long",
+	"switch", "case", "enum", "register", "typedef", "char",
+	"extern", "return", "union", "const", "float", "short",
+	"unsigned", "continue", "for", "signed", "void", "default",
+	"goto", "sizeof", "voltile", "do", "if", "static", "while"};
 
-int isKeyword(char* word){
+int isKeyword(char *word)
+{
 	// printf("%s\n",word );
-	for(int i = 0; i < 32; i++){
-		if(strcmp(key[i], word) == 0) return 1;
+	for (int i = 0; i < 32; i++)
+	{
+		if (strcmp(key[i], word) == 0)
+			return 1;
 	}
 	return 0;
 }
 
 //Following functions have been copied
-
+// Returns 'true' if the character is a DELIMITER.
 bool isDelimiter(char ch)
 {
-    if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
-        ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
-        ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
-        ch == '[' || ch == ']' || ch == '{' || ch == '}')
-        return true;
-    return false;
+	if (ch == ' ' || ch == '+' || ch == '-' || ch == '*' ||
+		ch == '/' || ch == ',' || ch == ';' || ch == '>' ||
+		ch == '<' || ch == '=' || ch == '(' || ch == ')' ||
+		ch == '[' || ch == ']' || ch == '{' || ch == '}')
+		return (true);
+	return (false);
 }
 
-
-bool isRealNumber(char* str)
+// Returns 'true' if the string is a REAL NUMBER.
+bool isRealNumber(char *str)
 {
-    int i, len = strlen(str);
-    bool hasDecimal = false;
+	int i, len = strlen(str);
+	bool hasDecimal = false;
 
-    if (len == 0)
-        return (false);
-    for (i = 0; i < len; i++) {
-        if (str[i] != '0' && str[i] != '1' && str[i] != '2'
-            && str[i] != '3' && str[i] != '4' && str[i] != '5'
-            && str[i] != '6' && str[i] != '7' && str[i] != '8'
-            && str[i] != '9' && str[i] != '.' ||
-            (str[i] == '-' && i > 0))
-            return (false);
-        if (str[i] == '.')
-            hasDecimal = true;
-    }
-    return hasDecimal;
+	if (len == 0)
+		return (false);
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != '0' && str[i] != '1' && str[i] != '2' && str[i] != '3' && str[i] != '4' && str[i] != '5' && str[i] != '6' && str[i] != '7' && str[i] != '8' && str[i] != '9' && str[i] != '.' ||
+			(str[i] == '-' && i > 0))
+			return (false);
+		if (str[i] == '.')
+			hasDecimal = true;
+	}
+	return (hasDecimal);
 }
 
-
-bool isInteger(char* str)
+// Returns 'true' if the string is a REAL NUMBER.
+bool isInteger(char *str)
 {
-    int i, len = strlen(str);
+	int i, len = strlen(str);
 
-    if (len == 0)
-        return (false);
-    for (i = 0; i < len; i++) {
-        if (str[i] != '0' && str[i] != '1' && str[i] != '2'
-            && str[i] != '3' && str[i] != '4' && str[i] != '5'
-            && str[i] != '6' && str[i] != '7' && str[i] != '8'
-            && str[i] != '9'|| str[i]=='.' || (str[i] == '-' && i > 0))
-            return (false);
-    }
-    return (true);
+	if (len == 0)
+		return (false);
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != '0' && str[i] != '1' && str[i] != '2' && str[i] != '3' && str[i] != '4' && str[i] != '5' && str[i] != '6' && str[i] != '7' && str[i] != '8' && str[i] != '9' || (str[i] == '-' && i > 0))
+			return (false);
+	}
+	return (true);
 }
-
 
 // Copied Till here
 
 int main(int argc, char const *argv[])
 {
-	FILE *fa,*fb;
-	int ca,cb;
-	removeDirectives();
+	FILE *fa, *fb;
+	int ca, cb;
+	removeDirectives(); // remove commments is called there
 
-	fa = fopen("q2out.txt","r");
-	if(fa == NULL){
+	fa = fopen("q2out.c", "r");
+	if (fa == NULL)
+	{
 		printf("Cannot open\n");
 		return 0;
 	}
 	char word[20], num[20];
 	int i = 0;
-	num[0]='\0';
+	for (size_t i = 0; i < 20; ++i)
+		num[i] = 0;
 	ca = getc(fa);
-	int row=1, col=1;
-	while(ca != EOF){
-         struct token s;
+	int row = 1, col = 0;
+	while (ca != EOF)
+	{
+
 		// line break
-		if(ca == '\n'){
+		if (ca == '\n')
+		{
 			row++;
-			col = 1;
+			col = 0;
 			printf("\n");
 		}
 
 		// check string
-		else if(ca == '"'){
-			strcpy(s.token_name,"string literal");
-			s.row=row;
-			s.col=col;
-			print_token(s);
+		else if (ca == '"')
+		{
+			printf("<String, %d,%d>\n", row, col);
 			ca = getc(fa);
-			while(ca != '"'){
+			while (ca != '"')
+			{
 				col++;
 				ca = getc(fa);
 			}
 		}
 
-		else if(ca == ' ') {
-			ca= getc(fa);
-			col++;
+		else if (ca == ' ')
+		{
+			ca = getc(fa);
 			continue;
 		}
 
 		// is a word ->  keyword / variable
-		else if(isalpha(ca)) {
+		else if (isalpha(ca) != 0)
+		{
 			word[i++] = ca;
-			while(isalpha(ca) || isdigit(ca) || ca == '_'){
-				word[i++] = ca;
+			while (isalpha(ca) != 0 || isdigit(ca) != 0 || ca == '_')
+			{
 				ca = getc(fa);
+				if (isalpha(ca) != 0 || isdigit(ca) != 0 || ca == '_')
+					word[i++] = ca;
 				col++;
 			}
-			word[i]='\0';
-			if(isKeyword(word)){
-					strcpy(s.token_name,word);
-					s.row=row;
-					s.col=col- (int)(strlen(word))+1;
-					print_token(s);
-		   }
-			else{
-				    strcpy(s.token_name,"id");
-					s.row=row;
-					s.col=col- (int)(strlen(word))+1;
-					print_token(s);
-			}
+			if (isKeyword(word))
+				printf("<%s,%d,%d>\n", word, row, col - (int)(strlen(word)) + 1);
+			else
+				printf("<id_%s,%d,%d>\n", word, row, col - (int)(strlen(word)) + 1);
 			i = 0;
-			word[0]='\0';
-  			continue;
+			for (size_t i = 0; i < sizeof word; ++i)
+				word[i] = 0;
+			continue;
 		}
 
 		// is an Delimeter
-		else if(isDelimiter(ca)){
-					s.token_name[0]=ca;
-					s.token_name[1]='\0';
-					s.row=row;
-					s.col=col-1;
-					print_token(s);
+		else if (isDelimiter(ca))
+		{
+			printf("<%c,%d,%d>\n", ca, row, col + 1);
 		}
 
 		// is a number of any sort
-		else if(isdigit(ca)){
+		else if (isdigit(ca) != 0)
+		{
 			num[i++] = ca;
-			while(isdigit(ca)|| ca == '.'){
-				num[i++] = ca;
+			while (isdigit(ca) != 0 || ca == '.')
+			{
 				ca = getc(fa);
+				if (isdigit(ca) != 0 || ca == '.')
+					num[i++] = ca;
 				col++;
 			}
-			num[i]='\0';
-			if(isRealNumber(num) || isInteger(num)){
-					strcpy(s.token_name,"num");
-					s.row=row;
-					s.col=col- (int)(strlen(num))+1;
-					print_token(s);
-		    }
+			if (isRealNumber(num) || isInteger(num))
+				printf("<%s,%d,%d>\n", num, row, col - (int)(strlen(num)) + 1);
 			i = 0;
-			num[0]='\0';
+			for (size_t i = 0; i < sizeof num; ++i)
+				num[i] = 0;
 			continue;
 		}
 

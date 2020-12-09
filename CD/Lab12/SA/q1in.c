@@ -4,13 +4,13 @@
 #define val2 1000
 #define val3 1000
 
-main() 
+int main()
 {
     int a;
-    long b;   // equivalent to long int b;
-    long long c;  // equivalent to long long int c;
+    long b;      // equivalent to long int b;
+    long long c; // equivalent to long long int c;
     double e;
-    long   double    f;
+    long double f;
     /*
     Hello
     */
