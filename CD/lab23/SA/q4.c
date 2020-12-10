@@ -198,7 +198,6 @@ int main(int argc, char const *argv[])
 	int row = 1, col = 0;
 	while (ca != EOF)
 	{
-
 		// line break
 		if (ca == '\n')
 		{
