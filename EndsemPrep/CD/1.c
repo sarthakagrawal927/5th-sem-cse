@@ -180,6 +180,7 @@ struct token getNextToken(FILE *fa)
 			}
 			fseek(fa, -1, SEEK_CUR);
 		}
+
 		else if (ca == '/')
 		{
 			cb = getc(fa);
@@ -197,7 +198,6 @@ struct token getNextToken(FILE *fa)
 						ca = getc(fa);
 					ca = getc(fa);
 				} while (ca != '/');
-				;
 			}
 			else
 			{
@@ -205,6 +205,7 @@ struct token getNextToken(FILE *fa)
 			}
 		}
 		// check string
+
 		else if (ca == '"')
 		{
 			// printf(" 5 \n");
@@ -282,6 +283,7 @@ struct token getNextToken(FILE *fa)
 			}
 			return s;
 		}
+
 		else if (isArithmetic_operator(ca))
 		{
 			char c[10];
