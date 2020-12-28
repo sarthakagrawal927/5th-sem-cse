@@ -6,10 +6,10 @@
 #include<limits.h>
 #include<fcntl.h>
 #include<string.h>
- 
+
 #define FIFO_NAME "/tmp/my_fifo"
 #define BUFFER_SIZE PIPE_BUF
- 
+
 int main(int argc, char const *argv[])
 {
     int pipe_fd;
@@ -17,11 +17,11 @@ int main(int argc, char const *argv[])
     int open_mode = O_RDONLY;
     int bytes_read = 0;
     int buffer;
- 
+
     printf("Process %d opening FIFO O_RDONLY\n", getpid());
     pipe_fd = open(FIFO_NAME, open_mode);
     printf("Process %d result %d\n", getpid(), pipe_fd);
- 
+
     int count = 0;
     if(pipe_fd != -1){
         do{
@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
     }
     else
         exit(EXIT_FAILURE);
- 
+
     printf("Process %d finished, %d bytes read\n", getpid(), bytes_read);
     exit(EXIT_SUCCESS);
     return 0;

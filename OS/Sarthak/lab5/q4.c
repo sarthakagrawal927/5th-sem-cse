@@ -18,13 +18,13 @@ int main()
  
   printf("Write finished!! \n");
   fclose(fptr);
- 
+
   fptr = fopen("demo.bin","rb");
- 
+
   for(int i=1;i<=4;i++)
   {
     fread(&num1, sizeof(int), 1, fptr); 
     printf("%d\n",num1);
-  }     
+  }
   printf("Read finished!! \n");
 }

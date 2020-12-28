@@ -12,6 +12,7 @@
  
 int main(int argc, char const *argv[])
 {
+    mkfifo(FIFO_NAME, 0666);
     //This program will first read and then write
     char buffer[1024]; 
     int res, pipe_fd;
